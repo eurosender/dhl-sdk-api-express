@@ -7,6 +7,7 @@ namespace Dhl\Express\Webservice\Soap\TypeMapper;
 
 use Dhl\Express\Api\Data\Request\PackageInterface;
 use Dhl\Express\Api\Data\ShipmentRequestInterface;
+use Dhl\Express\Model\Request\ExportLineItem;
 use Dhl\Express\Model\Request\Package;
 use Dhl\Express\Model\Request\Shipment\ShipmentDetails;
 use Dhl\Express\Webservice\Soap\Type\Common\Billing;
@@ -17,6 +18,7 @@ use Dhl\Express\Webservice\Soap\Type\Common\SpecialServices\ServiceType;
 use Dhl\Express\Webservice\Soap\Type\Common\UnitOfMeasurement;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\DangerousGoods;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\DangerousGoods\Content;
+use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\Packages;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\Packages\RequestedPackages;
@@ -36,268 +38,332 @@ use Dhl\Express\Webservice\Soap\Type\SoapShipmentRequest;
  */
 class ShipmentRequestMapper
 {
-    /**
-     * @param ShipmentRequestInterface $request
-     *
-     * @return SoapShipmentRequest
-     * @throws \Exception
-     */
-    public function map(ShipmentRequestInterface $request)
-    {
-        $this->checkConsistentUOM($request->getPackages());
+	/**
+	 * @param ShipmentRequestInterface $request
+	 *
+	 * @return SoapShipmentRequest
+	 * @throws \Exception
+	 */
+	public function map(ShipmentRequestInterface $request)
+	{
+		$this->checkConsistentUOM($request->getPackages());
 
-        // Since we checked that all packages use the same UOMs, we can just take them from any package
-        $weightUOM = $request->getPackages()[0]->getWeightUOM();
-        $dimensionsUOM = $request->getPackages()[0]->getDimensionsUOM();
+		// Since we checked that all packages use the same UOMs, we can just take them from any package
+		$weightUOM = $request->getPackages()[0]->getWeightUOM();
+		$dimensionsUOM = $request->getPackages()[0]->getDimensionsUOM();
 
-        // Create shipment info
-        $shipmentInfo = new ShipmentInfo(
-            $this->getDropOfTypeFromShipDetails(
-                $request->getShipmentDetails()->isUnscheduledPickup()
-            ),
-            $request->getShipmentDetails()->getServiceType(),
-            $request->getShipmentDetails()->getCurrencyCode(),
-            $this->mapUOM($weightUOM, $dimensionsUOM)
-        );
+		// Create shipment info
+		$shipmentInfo = new ShipmentInfo(
+			$this->getDropOfTypeFromShipDetails(
+				$request->getShipmentDetails()->isUnscheduledPickup()
+			),
+			$request->getShipmentDetails()->getServiceType(),
+			$request->getShipmentDetails()->getCurrencyCode(),
+			$this->mapUOM($weightUOM, $dimensionsUOM)
+		);
 
-	    if (!empty($request->getShipmentDetails()->getSpecialShipmentInstructions())) {
-		    $shipmentInfo->setSpecialPickupInstructions($request->getShipmentDetails()->getSpecialShipmentInstructions());
-	    }
+		if (!empty($request->getShipmentDetails()->getSpecialShipmentInstructions())) {
+			$shipmentInfo->setSpecialPickupInstructions($request->getShipmentDetails()->getSpecialShipmentInstructions());
+		}
 
-	    if (!empty($request->getShipmentDetails()->getPaperlessEncodedStringDocument())) {
-	    	$shipmentInfo->setPaperlessTradeEnabled(true);
-	    	$shipmentInfo->setPaperlessTradeImage($request->getShipmentDetails()->getPaperlessEncodedStringDocument());
-	    }
+		if (!empty($request->getShipmentDetails()->getPaperlessEncodedStringDocument())) {
+			$shipmentInfo->setPaperlessTradeEnabled(true);
+			$shipmentInfo->setPaperlessTradeImage($request->getShipmentDetails()->getPaperlessEncodedStringDocument());
+		}
 
-        // Create ship
-        $ship = new Ship(
-            new Ship\ContactInfo(
-                new Ship\Contact(
-                    $request->getShipper()->getName(),
-                    $request->getShipper()->getCompany(),
-                    $request->getShipper()->getPhone()
-                ),
-                new Address(
-                    $request->getShipper()->getStreetLines()[0],
-                    $request->getShipper()->getCity(),
-                    $request->getShipper()->getPostalCode(),
-                    $request->getShipper()->getCountryCode(),
-	                $request->getShipper()->getStateOrProvince()
-                )
-            ),
-            new Ship\ContactInfo(
-                new Ship\Contact(
-                    $request->getRecipient()->getName(),
-                    $request->getRecipient()->getCompany(),
-                    $request->getRecipient()->getPhone()
-                ),
-                new Address(
-                    $request->getRecipient()->getStreetLines()[0],
-                    $request->getRecipient()->getCity(),
-                    $request->getRecipient()->getPostalCode(),
-                    $request->getRecipient()->getCountryCode(),
-	                $request->getRecipient()->getStateOrProvince()
-                )
-            )
-        );
+		// Create ship
+		$ship = new Ship(
+			new Ship\ContactInfo(
+				new Ship\Contact(
+					$request->getShipper()->getName(),
+					$request->getShipper()->getCompany(),
+					$request->getShipper()->getPhone()
+				),
+				new Address(
+					$request->getShipper()->getStreetLines()[0],
+					$request->getShipper()->getCity(),
+					$request->getShipper()->getPostalCode(),
+					$request->getShipper()->getCountryCode(),
+					$request->getShipper()->getStateOrProvince()
+				)
+			),
+			new Ship\ContactInfo(
+				new Ship\Contact(
+					$request->getRecipient()->getName(),
+					$request->getRecipient()->getCompany(),
+					$request->getRecipient()->getPhone()
+				),
+				new Address(
+					$request->getRecipient()->getStreetLines()[0],
+					$request->getRecipient()->getCity(),
+					$request->getRecipient()->getPostalCode(),
+					$request->getRecipient()->getCountryCode(),
+					$request->getRecipient()->getStateOrProvince()
+				)
+			)
+		);
 
-        $commodities = new InternationalDetail\Commodities(
-            $request->getShipmentDetails()->getDescription()
-        );
+		$exportLineItems = $this->setExportLineItems($request);
 
-        $commodities->setNumberOfPieces($request->getShipmentDetails()->getNumberOfPieces());
-        $commodities->setCustomsValue($request->getShipmentDetails()->getCustomsValue());
+		$commodities = new InternationalDetail\Commodities(
+			$request->getShipmentDetails()->getDescription()
+		);
 
-        // Create shipment
-        $requestedShipment = new RequestedShipment(
-            $shipmentInfo,
-            $request->getShipmentDetails()->getReadyAtTimestamp(),
-            $request->getShipmentDetails()->getTermsOfTrade(),
-            new InternationalDetail(
-                $commodities
-            ),
-            $ship,
-            new Packages(
-                $this->mapPackages($request->getPackages())
-            )
-        );
+		$commodities->setNumberOfPieces($request->getShipmentDetails()->getNumberOfPieces());
+		$commodities->setCustomsValue($request->getShipmentDetails()->getCustomsValue());
 
-        $shipperStreetLines = $request->getShipper()->getStreetLines();
-        if ((count($shipperStreetLines) > 1) && !empty($shipperStreetLines[1])) {
-            $requestedShipment->getShip()->getShipper()->getAddress()->setStreetLines2($shipperStreetLines[1]);
-        }
+		$exportDeclaration = $this->setExportDeclaration($request);
 
-        if ((count($shipperStreetLines) > 2) && !empty($shipperStreetLines[2])) {
-            $requestedShipment->getShip()->getShipper()->getAddress()->setStreetLines3($shipperStreetLines[2]);
-        }
+		if (isset($exportDeclaration)) {
+			$exportDeclaration->setExportLineItems($exportLineItems);
+		}
 
-        $shipperEmail = $request->getShipper()->getEmail();
-        if (!empty($shipperEmail)) {
-            $requestedShipment->getShip()->getShipper()->getContact()->setEmailAddress($shipperEmail);
-        }
+		$internationalDetails = new InternationalDetail(
+			$commodities,
+			$exportDeclaration
+		);
 
-        $recipientStreetLines = $request->getRecipient()->getStreetLines();
-        if ((count($recipientStreetLines) > 1) && !empty($recipientStreetLines[1])) {
-            $requestedShipment->getShip()->getRecipient()->getAddress()->setStreetLines2($recipientStreetLines[1]);
-        }
+		// Create shipment
+		$requestedShipment = new RequestedShipment(
+			$shipmentInfo,
+			$request->getShipmentDetails()->getReadyAtTimestamp(),
+			$request->getShipmentDetails()->getTermsOfTrade(),
+			$internationalDetails,
+			$ship,
+			new Packages(
+				$this->mapPackages($request->getPackages())
+			)
+		);
 
-        if ((count($recipientStreetLines) > 2) && !empty($recipientStreetLines[2])) {
-            $requestedShipment->getShip()->getRecipient()->getAddress()->setStreetLines3($recipientStreetLines[2]);
-        }
+		$shipperStreetLines = $request->getShipper()->getStreetLines();
+		if ((count($shipperStreetLines) > 1) && !empty($shipperStreetLines[1])) {
+			$requestedShipment->getShip()->getShipper()->getAddress()->setStreetLines2($shipperStreetLines[1]);
+		}
 
-        $recipientEmail = $request->getRecipient()->getEmail();
-        if (!empty($recipientEmail)) {
-            $requestedShipment->getShip()->getRecipient()->getContact()->setEmailAddress($recipientEmail);
-        }
+		if ((count($shipperStreetLines) > 2) && !empty($shipperStreetLines[2])) {
+			$requestedShipment->getShip()->getShipper()->getAddress()->setStreetLines3($shipperStreetLines[2]);
+		}
 
-        $shippingPaymentType = $request->getBillingAccountNumber()
-            ? Billing\ShippingPaymentType::R
-            : Billing\ShippingPaymentType::S;
+		$shipperEmail = $request->getShipper()->getEmail();
+		if (!empty($shipperEmail)) {
+			$requestedShipment->getShip()->getShipper()->getContact()->setEmailAddress($shipperEmail);
+		}
 
-        $requestedShipment->getShipmentInfo()->setBilling(
-            new Billing(
-                $request->getPayerAccountNumber(),
-                $shippingPaymentType,
-                $request->getBillingAccountNumber()
-            )
-        );
+		$recipientStreetLines = $request->getRecipient()->getStreetLines();
+		if ((count($recipientStreetLines) > 1) && !empty($recipientStreetLines[1])) {
+			$requestedShipment->getShip()->getRecipient()->getAddress()->setStreetLines2($recipientStreetLines[1]);
+		}
 
-        $requestedShipment->getInternationalDetail()->setContent(
-            $request->getShipmentDetails()->getContentType()
-        );
+		if ((count($recipientStreetLines) > 2) && !empty($recipientStreetLines[2])) {
+			$requestedShipment->getShip()->getRecipient()->getAddress()->setStreetLines3($recipientStreetLines[2]);
+		}
 
-        $specialServicesList = [];
-        if ($insurance = $request->getInsurance()) {
-            $insuranceService = new Service($insurance->getType());
-            $insuranceService->setServiceValue($insurance->getValue());
-            $insuranceService->setCurrencyCode($insurance->getCurrencyCode());
-            $specialServicesList[] = $insuranceService;
-        }
+		$recipientEmail = $request->getRecipient()->getEmail();
+		if (!empty($recipientEmail)) {
+			$requestedShipment->getShip()->getRecipient()->getContact()->setEmailAddress($recipientEmail);
+		}
 
-        if ($shipmentInfo->getPaperlessTradeEnabled()) {
-	        $paperlessService = new Service(ServiceType::TYPE_PAPERLESS);
-	        $specialServicesList[] = $paperlessService;
-        }
+		$shippingPaymentType = $request->getBillingAccountNumber()
+			? Billing\ShippingPaymentType::R
+			: Billing\ShippingPaymentType::S;
 
-        if (!empty($specialServicesList)) {
-            $specialServices = new SpecialServices($specialServicesList);
-            $requestedShipment->getShipmentInfo()->setSpecialServices($specialServices);
-        }
+		$requestedShipment->getShipmentInfo()->setBilling(
+			new Billing(
+				$request->getPayerAccountNumber(),
+				$shippingPaymentType,
+				$request->getBillingAccountNumber()
+			)
+		);
 
-        // Create dangerous goods
-        if ($dryIce = $request->getDryIce()) {
-            $requestedShipment->setDangerousGoods(
-                new DangerousGoods(
-                    new Content(
-                        $dryIce->getContentId(),
-                        number_format($dryIce->getWeight(), 2),
-                        $dryIce->getUNCode()
-                    )
-                )
-            );
-        }
+		$requestedShipment->getInternationalDetail()->setContent(
+			$request->getShipmentDetails()->getContentType()
+		);
 
-        return new SoapShipmentRequest($requestedShipment);
-    }
+		$specialServicesList = [];
+		if ($insurance = $request->getInsurance()) {
+			$insuranceService = new Service($insurance->getType());
+			$insuranceService->setServiceValue($insurance->getValue());
+			$insuranceService->setCurrencyCode($insurance->getCurrencyCode());
+			$specialServicesList[] = $insuranceService;
+		}
 
-    /**
-     * @param PackageInterface[] $packages
-     *
-     * @return RequestedPackages[]
-     */
-    private function mapPackages(array $packages)
-    {
-        $requestedPackages = [];
+		if ($shipmentInfo->getPaperlessTradeEnabled()) {
+			$paperlessService = new Service(ServiceType::TYPE_PAPERLESS);
+			$specialServicesList[] = $paperlessService;
+		}
 
-        foreach ($packages as $package) {
-            $requestedPackages[] = new RequestedPackages(
-                $package->getWeight(),
-                new Dimensions(
-                    $package->getLength(),
-                    $package->getWidth(),
-                    $package->getHeight()
-                ),
-                $package->getCustomerReferences(),
-                $package->getSequenceNumber()
-            );
-        }
+		if (!empty($specialServicesList)) {
+			$specialServices = new SpecialServices($specialServicesList);
+			$requestedShipment->getShipmentInfo()->setSpecialServices($specialServices);
+		}
 
-        return $requestedPackages;
-    }
+		// Create dangerous goods
+		if ($dryIce = $request->getDryIce()) {
+			$requestedShipment->setDangerousGoods(
+				new DangerousGoods(
+					new Content(
+						$dryIce->getContentId(),
+						number_format($dryIce->getWeight(), 2),
+						$dryIce->getUNCode()
+					)
+				)
+			);
+		}
 
-    /**
-     * Returns whether the pickup is a scheduled one or not.
-     *
-     * @param bool $isUnscheduledPickup Whether the pickup is a scheduled one or not
-     *
-     * @return string
-     */
-    public function getDropOfTypeFromShipDetails($isUnscheduledPickup)
-    {
-        if ($isUnscheduledPickup) {
-            return ShipmentDetails::UNSCHEDULED_PICKUP;
-        }
+		return new SoapShipmentRequest($requestedShipment);
+	}
 
-        return ShipmentDetails::REGULAR_PICKUP;
-    }
+	/**
+	 * @param PackageInterface[] $packages
+	 *
+	 * @return RequestedPackages[]
+	 */
+	private function mapPackages(array $packages)
+	{
+		$requestedPackages = [];
 
-    /**
-     * Check if all packages have the same units of measurement (UOM) for weight and dimensions.
-     *
-     * @param PackageInterface[] $packages The list of packages
-     *
-     * @return void
-     * @throws \InvalidArgumentException
-     */
-    private function checkConsistentUOM(array $packages)
-    {
-        $weightUom = null;
-        $dimensionsUOM = null;
+		foreach ($packages as $package) {
+			$requestedPackages[] = new RequestedPackages(
+				$package->getWeight(),
+				new Dimensions(
+					$package->getLength(),
+					$package->getWidth(),
+					$package->getHeight()
+				),
+				$package->getCustomerReferences(),
+				$package->getSequenceNumber()
+			);
+		}
 
-        /** @var PackageInterface $package */
-        foreach ($packages as $package) {
-            if (!$weightUom) {
-                $weightUom = $package->getWeightUOM();
-            }
+		return $requestedPackages;
+	}
 
-            if (!$dimensionsUOM) {
-                $dimensionsUOM = $package->getDimensionsUOM();
-            }
+	/**
+	 * Returns whether the pickup is a scheduled one or not.
+	 *
+	 * @param bool $isUnscheduledPickup Whether the pickup is a scheduled one or not
+	 *
+	 * @return string
+	 */
+	public function getDropOfTypeFromShipDetails($isUnscheduledPickup)
+	{
+		if ($isUnscheduledPickup) {
+			return ShipmentDetails::UNSCHEDULED_PICKUP;
+		}
 
-            if ($weightUom !== $package->getWeightUOM()) {
-                throw new \InvalidArgumentException(
-                    'All packages weights must have a consistent unit of measurement.'
-                );
-            }
+		return ShipmentDetails::REGULAR_PICKUP;
+	}
 
-            if ($dimensionsUOM !== $package->getDimensionsUOM()) {
-                throw new \InvalidArgumentException(
-                    'All packages dimensions must have a consistent unit of measurement.'
-                );
-            }
-        }
-    }
+	/**
+	 * Check if all packages have the same units of measurement (UOM) for weight and dimensions.
+	 *
+	 * @param PackageInterface[] $packages The list of packages
+	 *
+	 * @return void
+	 * @throws \InvalidArgumentException
+	 */
+	private function checkConsistentUOM(array $packages)
+	{
+		$weightUom = null;
+		$dimensionsUOM = null;
 
-    /**
-     * Maps the magento unit of measurement to the DHL express unit of measurement.
-     *
-     * @param string $weightUOM     The unit of measurement for weight
-     * @param string $dimensionsUOM The unit of measurement for dimensions
-     *
-     * @return string
-     */
-    private function mapUOM($weightUOM, $dimensionsUOM)
-    {
-        if (($weightUOM === Package::UOM_WEIGHT_KG) && ($dimensionsUOM === Package::UOM_DIMENSION_CM)) {
-            return UnitOfMeasurement::SI;
-        }
+		/** @var PackageInterface $package */
+		foreach ($packages as $package) {
+			if (!$weightUom) {
+				$weightUom = $package->getWeightUOM();
+			}
 
-        if (($weightUOM === Package::UOM_WEIGHT_LB) && ($dimensionsUOM === Package::UOM_DIMENSION_IN)) {
-            return UnitOfMeasurement::SU;
-        }
+			if (!$dimensionsUOM) {
+				$dimensionsUOM = $package->getDimensionsUOM();
+			}
 
-        throw new \InvalidArgumentException(
-            'All units of measurement have to be consistent (either metric system or US system).'
-        );
-    }
+			if ($weightUom !== $package->getWeightUOM()) {
+				throw new \InvalidArgumentException(
+					'All packages weights must have a consistent unit of measurement.'
+				);
+			}
+
+			if ($dimensionsUOM !== $package->getDimensionsUOM()) {
+				throw new \InvalidArgumentException(
+					'All packages dimensions must have a consistent unit of measurement.'
+				);
+			}
+		}
+	}
+
+	/**
+	 * Maps the magento unit of measurement to the DHL express unit of measurement.
+	 *
+	 * @param string $weightUOM     The unit of measurement for weight
+	 * @param string $dimensionsUOM The unit of measurement for dimensions
+	 *
+	 * @return string
+	 */
+	private function mapUOM($weightUOM, $dimensionsUOM)
+	{
+		if (($weightUOM === Package::UOM_WEIGHT_KG) && ($dimensionsUOM === Package::UOM_DIMENSION_CM)) {
+			return UnitOfMeasurement::SI;
+		}
+
+		if (($weightUOM === Package::UOM_WEIGHT_LB) && ($dimensionsUOM === Package::UOM_DIMENSION_IN)) {
+			return UnitOfMeasurement::SU;
+		}
+
+		throw new \InvalidArgumentException(
+			'All units of measurement have to be consistent (either metric system or US system).'
+		);
+	}
+
+	/**
+	 * @param ShipmentRequestInterface $request
+	 *
+	 * @return array
+	 */
+	private function setExportLineItems($request)
+	{
+		$exportLineItems = [];
+
+		if ($request->getInternationalDetail() !== null) {
+			/** @var ExportLineItem $exportLineItem */
+			foreach ($request->getInternationalDetail()->getExportLineItems() as $exportLineItem) {
+				$exportLineItemObject = new InternationalDetail\ExportDeclaration\ExportLineItems\ExportLineItem(
+					$exportLineItem->getItemDescription()
+				);
+
+				$exportLineItemObject
+					->setCountryOfManufacture($exportLineItem->getManufacturingCountryCode())
+					->setQuantity($exportLineItem->getQuantity())
+					->setUnitPrice($exportLineItem->getUnitPrice())
+					->setGrossWeight($exportLineItem->getGrossWeight())
+					->setNetWeight($exportLineItem->getNetWeight())
+					->setQuantityUnitOfMeasurement($exportLineItem->getQuantityUnitOfMeasurement())
+					->setCommodityCode($exportLineItem->getCommodityCode())
+					->getItemNumber($exportLineItem->getItemNumber());
+
+				$exportLineItems[] = $exportLineItemObject;
+			}
+		}
+
+		return $exportLineItems;
+	}
+
+	/**
+	 * @param ShipmentRequestInterface $request
+	 *
+	 * @return ExportDeclaration|void
+	 */
+	private function setExportDeclaration($request)
+	{
+		if (!empty($request->getInternationalDetail())) {
+			$exportDeclaration = new InternationalDetail\ExportDeclaration();
+
+			$exportDeclaration
+				->setPlaceOfIncoterm($request->getInternationalDetail()->getPlaceOfIncoterm())
+				->setInvoiceNumber($request->getInternationalDetail()->getInvoiceNumber())
+				->setInvoiceDate($request->getInternationalDetail()->getInvoiceDate())
+				->setExportReasonType($request->getInternationalDetail()->getExportReasonType());
+
+			return $exportDeclaration;
+		}
+	}
 }
