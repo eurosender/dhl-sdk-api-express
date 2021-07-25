@@ -2,9 +2,7 @@
 
 namespace Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail;
 
-use ExportDeclarationDhl\Express\Webservice\Soap\Type\Common\Content;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration\ExportLineItems\ExportLineItem;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportReference;
+use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration\ExportLineItems;
 
 class ExportDeclaration
 {
@@ -34,7 +32,7 @@ class ExportDeclaration
 	private $PlaceOfIncoterm;
 
 	/**
-	 * @var ExportLineItem[]
+	 * @var ExportLineItems
 	 */
 	private $ExportLineItems;
 
@@ -139,7 +137,7 @@ class ExportDeclaration
 	}
 
 	/**
-	 * @return ExportLineItem[]
+	 * @return ExportLineItems
 	 */
 	public function getExportLineItems()
 	{
@@ -147,7 +145,7 @@ class ExportDeclaration
 	}
 
 	/**
-	 * @param ExportLineItem[] $ExportLineItems
+	 * @param ExportLineItems $ExportLineItems
 	 *
 	 * @return ExportDeclaration
 	 */

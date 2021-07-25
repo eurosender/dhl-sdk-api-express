@@ -2,6 +2,7 @@
 
 namespace Dhl\Express\Model\Request;
 
+use Dhl\Express\Api\Data\Request\ExportLineItemInterface;
 use Dhl\Express\Api\Data\Request\InternationalDetailInterface;
 
 /**
@@ -115,7 +116,7 @@ class InternationalDetail implements InternationalDetailInterface
 	}
 
 	/**
-	 * @return ExportLineItem[]
+	 * @return ExportLineItemInterface[]
 	 */
 	public function getExportLineItems()
 	{

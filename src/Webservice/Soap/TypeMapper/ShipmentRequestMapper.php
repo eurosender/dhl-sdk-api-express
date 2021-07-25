@@ -7,7 +7,6 @@ namespace Dhl\Express\Webservice\Soap\TypeMapper;
 
 use Dhl\Express\Api\Data\Request\PackageInterface;
 use Dhl\Express\Api\Data\ShipmentRequestInterface;
-use Dhl\Express\Model\Request\ExportLineItem;
 use Dhl\Express\Model\Request\Package;
 use Dhl\Express\Model\Request\Shipment\ShipmentDetails;
 use Dhl\Express\Webservice\Soap\Type\Common\Billing;
@@ -18,8 +17,8 @@ use Dhl\Express\Webservice\Soap\Type\Common\SpecialServices\ServiceType;
 use Dhl\Express\Webservice\Soap\Type\Common\UnitOfMeasurement;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\DangerousGoods;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\DangerousGoods\Content;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail;
+use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\Packages;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\Packages\RequestedPackages;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\RequestedShipment;
@@ -63,7 +62,9 @@ class ShipmentRequestMapper
 		);
 
 		if (!empty($request->getShipmentDetails()->getSpecialShipmentInstructions())) {
-			$shipmentInfo->setSpecialPickupInstructions($request->getShipmentDetails()->getSpecialShipmentInstructions());
+			$shipmentInfo->setSpecialPickupInstructions(
+				$request->getShipmentDetails()->getSpecialShipmentInstructions()
+			);
 		}
 
 		if (!empty($request->getShipmentDetails()->getPaperlessEncodedStringDocument())) {
@@ -103,8 +104,6 @@ class ShipmentRequestMapper
 			)
 		);
 
-		$exportLineItems = $this->setExportLineItems($request);
-
 		$commodities = new InternationalDetail\Commodities(
 			$request->getShipmentDetails()->getDescription()
 		);
@@ -115,7 +114,11 @@ class ShipmentRequestMapper
 		$exportDeclaration = $this->setExportDeclaration($request);
 
 		if (isset($exportDeclaration)) {
-			$exportDeclaration->setExportLineItems($exportLineItems);
+			$exportDeclaration->setExportLineItems(
+				new ExportDeclaration\ExportLineItems(
+					$this->mapExportLineItems($request)
+				)
+			);
 		}
 
 		$internationalDetails = new InternationalDetail(
@@ -317,28 +320,27 @@ class ShipmentRequestMapper
 	/**
 	 * @param ShipmentRequestInterface $request
 	 *
-	 * @return array
+	 * @return ExportDeclaration\ExportLineItems\ExportLineItem[]
 	 */
-	private function setExportLineItems($request)
+	private function mapExportLineItems($request)
 	{
 		$exportLineItems = [];
 
 		if ($request->getInternationalDetail() !== null) {
-			/** @var ExportLineItem $exportLineItem */
 			foreach ($request->getInternationalDetail()->getExportLineItems() as $exportLineItem) {
 				$exportLineItemObject = new InternationalDetail\ExportDeclaration\ExportLineItems\ExportLineItem(
 					$exportLineItem->getItemDescription()
 				);
 
 				$exportLineItemObject
-					->setCountryOfManufacture($exportLineItem->getManufacturingCountryCode())
+					->setManufacturingCountryCode($exportLineItem->getManufacturingCountryCode())
 					->setQuantity($exportLineItem->getQuantity())
 					->setUnitPrice($exportLineItem->getUnitPrice())
 					->setGrossWeight($exportLineItem->getGrossWeight())
 					->setNetWeight($exportLineItem->getNetWeight())
 					->setQuantityUnitOfMeasurement($exportLineItem->getQuantityUnitOfMeasurement())
 					->setCommodityCode($exportLineItem->getCommodityCode())
-					->getItemNumber($exportLineItem->getItemNumber());
+					->setItemNumber($exportLineItem->getItemNumber());
 
 				$exportLineItems[] = $exportLineItemObject;
 			}

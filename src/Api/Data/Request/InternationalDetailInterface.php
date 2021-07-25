@@ -2,6 +2,8 @@
 
 namespace Dhl\Express\Api\Data\Request;
 
+use Dhl\Express\Model\Request\ExportLineItem;
+
 /**
  * International detail interface.
  *
@@ -37,7 +39,7 @@ interface InternationalDetailInterface
 	public function getRecepientReference();
 
 	/**
-	 * @return ExportLineItem[]
+	 * @return ExportLineItemInterface[]
 	 */
 	public function getExportLineItems();
 }

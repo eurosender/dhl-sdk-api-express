@@ -2,68 +2,51 @@
 
 namespace Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration\ExportLineItems;
 
-use Dhl\Express\Webservice\Soap\Type\Common\AlphaNumeric;
-use Dhl\Express\Webservice\Soap\Type\Common\Money;
-use Dhl\Express\Webservice\Soap\Type\Common\Numeric;
 use Dhl\Express\Webservice\Soap\Type\Common\Ship\Address\CountryCode;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\Commodities\CustomsValue;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\Commodities\Description;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\Commodities\NumberOfPieces;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\Commodities\Quantity;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\Commodities\UnitPrice;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\Commodities\USFillingTypeValue;
+use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration\ExportLineItems\ExportLineItem\Description;
 
 class ExportLineItem
 {
 	/**
-	 * The number of pieces. Transmit the number of pieces in shipment, but for validation
-	 * purposes this information is calculated based on the number of pieces in the message.
+	 * HS code for customs
 	 *
-	 * @var null|NumberOfPieces
+	 * @var string|null
 	 */
-	private $NumberOfPieces;
+	private $CommodityCode;
+
+	/**
+	 * @var int
+	 */
+	private $ItemNumber;
 
 	/**
 	 * The description field is used as a description of goods for the label and manifest.
 	 *
 	 * @var Description
+	 *
 	 */
-	private $Description;
+	private $ItemDescription;
 
 	/**
 	 * The country of manufacture.
 	 *
-	 * @var null|CountryCode
+	 * @var CountryCode
 	 */
-	private $CountryOfManufacture;
+	private $ManufacturingCountryCode;
 
 	/**
 	 * The quantity.
 	 *
-	 * @var null|Quantity
+	 * @var int
 	 */
 	private $Quantity;
 
 	/**
 	 * The unit price.
 	 *
-	 * @var null|UnitPrice
+	 * @var float
 	 */
 	private $UnitPrice;
-
-	/**
-	 * The customs value. Communicates the customs value of the shipment, used for manifesting.
-	 *
-	 * @var null|CustomsValue
-	 */
-	private $CustomsValue;
-
-	/**
-	 * The USFilingTypeValue is used for the US AES4, FTR and ITN numbers to be printed on the transport label.
-	 *
-	 * @var null|USFillingTypeValue
-	 */
-	private $USFillingTypeValue;
 
 	/**
 	 * Gross weight of single item
@@ -82,21 +65,9 @@ class ExportLineItem
 	/**
 	 * PCS = pieces
 	 *
-	 * @var string|null
+	 * @var string
 	 */
 	private $QuantityUnitOfMeasurement;
-
-	/**
-	 * HS code for customs
-	 *
-	 * @var int|null
-	 */
-	private $CommodityCode;
-
-	/**
-	 * @var int
-	 */
-	private $ItemNumber;
 
 	/**
 	 * Constructor.
@@ -109,36 +80,13 @@ class ExportLineItem
 	}
 
 	/**
-	 * Returns the number of pieces.
-	 *
-	 * @return null|NumberOfPieces
-	 */
-	public function getNumberOfPieces()
-	{
-		return $this->NumberOfPieces;
-	}
-
-	/**
-	 * Sets the number of pieces.
-	 *
-	 * @param int $numberOfPieces The number of pieces
-	 *
-	 * @return self
-	 */
-	public function setNumberOfPieces($numberOfPieces)
-	{
-		$this->NumberOfPieces = new NumberOfPieces($numberOfPieces);
-		return $this;
-	}
-
-	/**
 	 * Returns the description.
 	 *
 	 * @return Description
 	 */
 	public function getDescription()
 	{
-		return $this->Description;
+		return $this->ItemDescription;
 	}
 
 	/**
@@ -150,18 +98,19 @@ class ExportLineItem
 	 */
 	public function setDescription($description)
 	{
-		$this->Description = new Description($description);
+		$this->ItemDescription = new Description($description);
+
 		return $this;
 	}
 
 	/**
 	 * Returns the country of manufacture.
 	 *
-	 * @return null|CountryCode
+	 * @return CountryCode
 	 */
-	public function getCountryOfManufacture()
+	public function getManufacturingCountryCode()
 	{
-		return $this->CountryOfManufacture;
+		return $this->ManufacturingCountryCode;
 	}
 
 	/**
@@ -171,16 +120,17 @@ class ExportLineItem
 	 *
 	 * @return self
 	 */
-	public function setCountryOfManufacture($countryOfManufacture)
+	public function setManufacturingCountryCode($countryOfManufacture)
 	{
-		$this->CountryOfManufacture = new CountryCode($countryOfManufacture);
+		$this->ManufacturingCountryCode = new CountryCode($countryOfManufacture);
+
 		return $this;
 	}
 
 	/**
 	 * Returns the quantity.
 	 *
-	 * @return null|Quantity
+	 * @return int
 	 */
 	public function getQuantity()
 	{
@@ -196,14 +146,15 @@ class ExportLineItem
 	 */
 	public function setQuantity($quantity)
 	{
-		$this->Quantity = new Quantity($quantity);
+		$this->Quantity = $quantity;
+
 		return $this;
 	}
 
 	/**
 	 * Returns the unit price.
 	 *
-	 * @return null|UnitPrice
+	 * @return float
 	 */
 	public function getUnitPrice()
 	{
@@ -219,61 +170,13 @@ class ExportLineItem
 	 */
 	public function setUnitPrice($unitPrice)
 	{
-		$this->UnitPrice = new UnitPrice($unitPrice);
-		return $this;
-	}
-
-	/**
-	 * Returns the customs value.
-	 *
-	 * @return null|CustomsValue
-	 */
-	public function getCustomsValue()
-	{
-		return $this->CustomsValue;
-	}
-
-	/**
-	 * Sets the customs value.
-	 *
-	 * @param float|null $customsValue The customs value
-	 *
-	 * @return self
-	 */
-	public function setCustomsValue($customsValue)
-	{
-		if (!is_null($customsValue)) {
-			$this->CustomsValue = new CustomsValue($customsValue);
-		}
+		$this->UnitPrice = $unitPrice;
 
 		return $this;
 	}
 
 	/**
-	 * Returns the us filling type value.
-	 *
-	 * @return null|USFillingTypeValue
-	 */
-	public function getUSFillingTypeValue()
-	{
-		return $this->USFillingTypeValue;
-	}
-
-	/**
-	 * Sets the us filling type value.
-	 *
-	 * @param string $usFillingTypeValue The us filling type value
-	 *
-	 * @return self
-	 */
-	public function setUSFillingTypeValue($usFillingTypeValue)
-	{
-		$this->USFillingTypeValue = new USFillingTypeValue($usFillingTypeValue);
-		return $this;
-	}
-
-	/**
-	 * @return float|null
+	 * @return Weight
 	 */
 	public function getGrossWeight()
 	{
@@ -281,9 +184,8 @@ class ExportLineItem
 	}
 
 	/**
-	 * @param float|null $GrossWeight
+	 * @param float $GrossWeight
 	 *
-	 * @return Commodities
 	 */
 	public function setGrossWeight($GrossWeight)
 	{
@@ -293,7 +195,7 @@ class ExportLineItem
 	}
 
 	/**
-	 * @return float|null
+	 * @return Weight
 	 */
 	public function getNetWeight()
 	{
@@ -301,9 +203,8 @@ class ExportLineItem
 	}
 
 	/**
-	 * @param float|null $NetWeight
+	 * @param float $NetWeight
 	 *
-	 * @return Commodities
 	 */
 	public function setNetWeight($NetWeight)
 	{
@@ -313,7 +214,7 @@ class ExportLineItem
 	}
 
 	/**
-	 * @return string|null
+	 * @return string
 	 */
 	public function getQuantityUnitOfMeasurement()
 	{
@@ -321,7 +222,7 @@ class ExportLineItem
 	}
 
 	/**
-	 * @param string|null $QuantityUnitOfMeasurement
+	 * @param string $QuantityUnitOfMeasurement
 	 *
 	 * @return ExportLineItem
 	 */
