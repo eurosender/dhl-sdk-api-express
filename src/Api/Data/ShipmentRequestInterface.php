@@ -6,11 +6,13 @@
 namespace Dhl\Express\Api\Data;
 
 use Dhl\Express\Api\Data\Request\InsuranceInterface;
+use Dhl\Express\Api\Data\Request\InternationalDetailInterface;
 use Dhl\Express\Api\Data\Request\PackageInterface;
 use Dhl\Express\Api\Data\Request\RecipientInterface;
 use Dhl\Express\Api\Data\Request\Shipment\DangerousGoods\DryIceInterface;
 use Dhl\Express\Api\Data\Request\Shipment\ShipmentDetailsInterface;
 use Dhl\Express\Api\Data\Request\Shipment\ShipperInterface;
+use Dhl\Express\Model\Request\InternationalDetail;
 
 /**
  * Shipment Request Interface.
@@ -24,43 +26,48 @@ use Dhl\Express\Api\Data\Request\Shipment\ShipperInterface;
  */
 interface ShipmentRequestInterface
 {
-    /**
-     * @return ShipmentDetailsInterface
-     */
-    public function getShipmentDetails();
+	/**
+	 * @return ShipmentDetailsInterface
+	 */
+	public function getShipmentDetails();
 
-    /**
-     * @return string
-     */
-    public function getPayerAccountNumber();
+	/**
+	 * @return string
+	 */
+	public function getPayerAccountNumber();
 
-    /**
-     * @return string
-     */
-    public function getBillingAccountNumber();
+	/**
+	 * @return string
+	 */
+	public function getBillingAccountNumber();
 
-    /**
-     * @return null|InsuranceInterface
-     */
-    public function getInsurance();
+	/**
+	 * @return null|InsuranceInterface
+	 */
+	public function getInsurance();
 
-    /**
-     * @return ShipperInterface
-     */
-    public function getShipper();
+	/**
+	 * @return ShipperInterface
+	 */
+	public function getShipper();
 
-    /**
-     * @return RecipientInterface
-     */
-    public function getRecipient();
+	/**
+	 * @return RecipientInterface
+	 */
+	public function getRecipient();
 
-    /**
-     * @return PackageInterface[]
-     */
-    public function getPackages();
+	/**
+	 * @return PackageInterface[]
+	 */
+	public function getPackages();
 
-    /**
-     * @return null|DryIceInterface
-     */
-    public function getDryIce();
+	/**
+	 * @return null|DryIceInterface
+	 */
+	public function getDryIce();
+
+	/**
+	 * @return InternationalDetailInterface|null
+	 */
+	public function getInternationalDetail();
 }
