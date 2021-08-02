@@ -598,8 +598,32 @@
 					<xsd:documentation>Invoice number. This field is mandatory when RequestCommercialInvoice = Y.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+            <xsd:element minOccurs="0" name="ExportReasonType" type="tns:ExportReasonType">
+                <xsd:annotation>
+                    <xsd:documentation>Reason for Export.  Possible values:
+                        PERMANENT
+                        TEMPORARY
+                        RETURN
+                        USED_EXHIBITION_GOODS_TO_ORIGIN
+                        INTERCOMPANY_USE
+                        COMMERCIAL_PURPOSE_OR_SALE
+                        PERSONAL_BELONGINGS_OR_PERSONAL_USE
+                        SAMPLE
+                        GIFT
+                        RETURN_TO_ORIGIN
+                        WARRANTY_REPLACEMENT
+                        DIPLOMATIC_GOODS
+                        DEFENCE_MATERIAL
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
 			<xsd:element minOccurs="0" name="InvoiceDeclarationTexts" type="tns:InvoiceDeclarationTexts"/>
-			<xsd:element minOccurs="0" name="InvoiceSignatureDetails" type="tns:InvoiceSignatureDetails"/>
+            <xsd:element minOccurs="0" name="PlaceOfIncoterm" type="tns:PlaceOfIncoterm">
+                <xsd:annotation>
+                    <xsd:documentation>Name of port of departure, shipment or destination, as required under the applicable delivery term.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element minOccurs="0" name="InvoiceSignatureDetails" type="tns:InvoiceSignatureDetails"/>
 			<xsd:element minOccurs="0" name="OtherCharges" type="tns:OtherCharges"/>
 			<xsd:element minOccurs="0" name="PackageMarks" type="xsd:string">
 				<xsd:annotation>
@@ -864,6 +888,14 @@
 			<xsd:maxLength value="300"/>
 		</xsd:restriction>
 	</xsd:simpleType>
+  <xsd:simpleType name="PlaceOfIncoterm">
+      <xsd:annotation>
+          <xsd:documentation>Name of port of departure, shipment or destination, as required under the applicable delivery term.</xsd:documentation>
+      </xsd:annotation>
+      <xsd:restriction base="xsd:string">
+          <xsd:maxLength value="256"/>
+      </xsd:restriction>
+  </xsd:simpleType>
 	<xsd:complexType name="InvoiceSignatureDetails">
 		<xsd:annotation>
 			<xsd:documentation>Custom Invoice Signature details</xsd:documentation>
