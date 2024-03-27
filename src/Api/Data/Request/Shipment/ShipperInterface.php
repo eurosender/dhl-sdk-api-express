@@ -74,4 +74,9 @@ interface ShipperInterface
 	 * @return string
 	 */
 	public function getStateOrProvince();
+
+	/**
+	 * @return string|null
+	 */
+	public function getMobilePhone();
 }
