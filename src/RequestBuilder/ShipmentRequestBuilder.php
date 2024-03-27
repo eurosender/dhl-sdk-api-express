@@ -15,6 +15,7 @@ use Dhl\Express\Model\Request\Shipment\DangerousGoods\DryIce;
 use Dhl\Express\Model\Request\Shipment\ShipmentDetails;
 use Dhl\Express\Model\Request\Shipment\Shipper;
 use Dhl\Express\Model\ShipmentRequest;
+use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\OnDemandDeliveryOptions;
 
 /**
  * Shipment Request Builder.
@@ -323,6 +324,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 		$name,
 		$company,
 		$phone,
+		$mobilePhone = null,
 		$email = null,
 		$stateOrProvince = null
 	)
@@ -335,6 +337,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			'name'            => $name,
 			'company'         => $company,
 			'phone'           => $phone,
+			'mobilePhone'     => $mobilePhone,
 			'email'           => $email,
 			'stateOrProvince' => $stateOrProvince,
 		];
@@ -350,6 +353,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 		$name,
 		$company,
 		$phone,
+		$mobilePhone = null,
 		$email = null,
 		$stateOrProvince = null
 	)
@@ -362,6 +366,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			'name'            => $name,
 			'company'         => $company,
 			'phone'           => $phone,
+			'mobilePhone'     => $mobilePhone,
 			'email'           => $email,
 			'stateOrProvince' => $stateOrProvince,
 		];
@@ -406,6 +411,21 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 		return $this;
 	}
 
+	public function setOnDemandDelivery(string $servicePointId)
+	{
+		$this->data['onDemandDelivery'] = new OnDemandDeliveryOptions(
+			OnDemandDeliveryOptions\DeliveryOption::TV,
+			null,
+			null,
+			null,
+			null,
+			null,
+			$servicePointId
+		);
+
+		return $this;
+	}
+
 	public function build()
 	{
 		// Build shipment details
@@ -432,6 +452,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			$this->data['shipper']['name'],
 			$this->data['shipper']['company'],
 			$this->data['shipper']['phone'],
+			$this->data['shipper']['mobilePhone'],
 			$this->data['shipper']['email'],
 			$this->data['shipper']['stateOrProvince']
 		);
@@ -445,6 +466,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			$this->data['recipient']['name'],
 			$this->data['recipient']['company'],
 			$this->data['recipient']['phone'],
+			$this->data['recipient']['mobilePhone'],
 			$this->data['recipient']['email'],
 			$this->data['recipient']['stateOrProvince']
 		);
@@ -527,6 +549,10 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			);
 
 			$request->setDryIce($dryIce);
+		}
+
+		if (isset($this->data['onDemandDelivery'])) {
+			$request->setOnDemandDeliveryOptions($this->data['onDemandDelivery']);
 		}
 
 		$this->data = [];

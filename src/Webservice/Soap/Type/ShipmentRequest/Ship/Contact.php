@@ -44,19 +44,28 @@ class Contact
      */
     private $MobilePhoneNumber;
 
-    /**
-     * Constructor.
-     *
-     * @param string $personName  The person name
-     * @param string $companyName The company name
-     * @param string $phoneNumber The phone number
-     */
-    public function __construct($personName, $companyName, $phoneNumber)
-    {
-        $this->setPersonName($personName)
-            ->setCompanyName($companyName)
-            ->setPhoneNumber($phoneNumber);
-    }
+	/**
+	 * @param string $personName
+	 * @param string$companyName
+	 * @param string $phoneNumber
+	 * @param string|null$mobilePhoneNumber
+	 * @param string|null $email
+	 */
+	public function __construct($personName, $companyName, $phoneNumber, $mobilePhoneNumber, $email)
+	{
+		$this
+			->setPersonName($personName)
+			->setCompanyName($companyName)
+			->setPhoneNumber($phoneNumber);
+
+		if ($mobilePhoneNumber) {
+			$this->setMobilePhoneNumber($mobilePhoneNumber);
+		}
+
+		if ($email) {
+			$this->setEmailAddress($email);
+		}
+	}
 
     /**
      * Returns the person name.
@@ -78,6 +87,7 @@ class Contact
     public function setPersonName($personName)
     {
         $this->PersonName = new PersonName($personName);
+
         return $this;
     }
 
@@ -101,6 +111,7 @@ class Contact
     public function setCompanyName($companyName)
     {
         $this->CompanyName = new CompanyName($companyName);
+
         return $this;
     }
 
@@ -124,6 +135,7 @@ class Contact
     public function setPhoneNumber($phoneNumber)
     {
         $this->PhoneNumber = new PhoneNumber($phoneNumber);
+
         return $this;
     }
 
@@ -147,6 +159,7 @@ class Contact
     public function setEmailAddress($emailAddress)
     {
         $this->EmailAddress = new EmailAddress($emailAddress);
+
         return $this;
     }
 
@@ -170,6 +183,7 @@ class Contact
     public function setMobilePhoneNumber($mobilePhoneNumber)
     {
         $this->MobilePhoneNumber = new MobilePhoneNumber($mobilePhoneNumber);
+
         return $this;
     }
 }

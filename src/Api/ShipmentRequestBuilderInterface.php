@@ -135,6 +135,7 @@ interface ShipmentRequestBuilderInterface
 	 * @param string $name
 	 * @param string $company
 	 * @param string $phone
+	 * @param string|null $mobilePhone
 	 * @param string|null $email
 	 *
 	 * @return ShipmentRequestBuilderInterface
@@ -147,6 +148,7 @@ interface ShipmentRequestBuilderInterface
 		$name,
 		$company,
 		$phone,
+		$mobilePhone = null,
 		$email = null
 	);
 
@@ -160,6 +162,7 @@ interface ShipmentRequestBuilderInterface
 	 * @param string $name
 	 * @param string $company
 	 * @param string $phone
+	 * @param string|null $mobilePhone
 	 * @param string|null $email
 	 *
 	 * @return ShipmentRequestBuilderInterface
@@ -172,6 +175,7 @@ interface ShipmentRequestBuilderInterface
 		$name,
 		$company,
 		$phone,
+		$mobilePhone = null,
 		$email = null
 	);
 
@@ -235,6 +239,13 @@ interface ShipmentRequestBuilderInterface
 		$recepientReference,
 		$exportItems
 	);
+
+	/**
+	 * @param string $servicePointId
+	 *
+	 * @return ShipmentRequestBuilderInterface
+	 */
+	public function setOnDemandDelivery(string $servicePointId);
 
 	/**
 	 * Builds the shipment request instance.

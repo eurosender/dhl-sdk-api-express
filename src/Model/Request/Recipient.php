@@ -76,6 +76,11 @@ class Recipient implements RecipientInterface
 	 */
 	private $stateOrProvince;
 
+	/**
+	 * @var string|null
+	 */
+	private $mobilePhone;
+
     /**
      * Recipient constructor.
      *
@@ -86,6 +91,7 @@ class Recipient implements RecipientInterface
      * @param string $name
      * @param string $company
      * @param string $phone
+     * @param string|null $mobilePhone
      * @param string|null $email
      * @param string|null $stateOrProvince
      */
@@ -97,6 +103,7 @@ class Recipient implements RecipientInterface
         $name,
         $company,
         $phone,
+		$mobilePhone = null,
         $email = null,
         $stateOrProvince = null
     ) {
@@ -107,6 +114,7 @@ class Recipient implements RecipientInterface
         $this->name = $name;
         $this->company = $company;
         $this->phone = $phone;
+		$this->mobilePhone = $mobilePhone;
         $this->email = $email;
 	    $this->stateOrProvince = $stateOrProvince;
     }
@@ -154,5 +162,10 @@ class Recipient implements RecipientInterface
 	public function getStateOrProvince()
 	{
 		return (string) $this->stateOrProvince;
+	}
+
+	public function getMobilePhone()
+	{
+		return $this->mobilePhone;
 	}
 }

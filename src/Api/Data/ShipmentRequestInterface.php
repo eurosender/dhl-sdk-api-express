@@ -13,6 +13,8 @@ use Dhl\Express\Api\Data\Request\Shipment\DangerousGoods\DryIceInterface;
 use Dhl\Express\Api\Data\Request\Shipment\ShipmentDetailsInterface;
 use Dhl\Express\Api\Data\Request\Shipment\ShipperInterface;
 use Dhl\Express\Model\Request\InternationalDetail;
+use Dhl\Express\Model\ShipmentRequest;
+use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\OnDemandDeliveryOptions;
 
 /**
  * Shipment Request Interface.
@@ -67,7 +69,28 @@ interface ShipmentRequestInterface
 	public function getDryIce();
 
 	/**
+	 * Sets the dry ice instance.
+	 *
+	 * @param DryIceInterface $dryIce The dry ice instance
+	 *
+	 * @return ShipmentRequest
+	 */
+	public function setDryIce(DryIceInterface $dryIce);
+
+	/**
 	 * @return InternationalDetailInterface|null
 	 */
 	public function getInternationalDetail();
+
+	/**
+	 * @return OnDemandDeliveryOptions|null
+	 */
+	public function getOnDemandDeliveryOptions();
+
+	/**
+	 * @param OnDemandDeliveryOptions $onDemandDeliveryOptions
+	 *
+	 * @return $this
+	 */
+	public function setOnDemandDeliveryOptions(OnDemandDeliveryOptions $onDemandDeliveryOptions);
 }

@@ -49,6 +49,7 @@ class ShipmentRequestBuilderTest extends \PHPUnit\Framework\TestCase
                 $name = 'Max Mustermann',
                 $company = 'Acme',
                 $phone = '004922832432423',
+                $mobilePhone = '0038640566678',
                 $email = 'shipper@example.com'
             )
             ->setRecipient(
@@ -59,6 +60,7 @@ class ShipmentRequestBuilderTest extends \PHPUnit\Framework\TestCase
                 $name,
                 $company,
                 $phone,
+				$mobilePhone,
                 $email
             )
             ->setDryIce($unCode = 'UN1845', $weight = 20.53);

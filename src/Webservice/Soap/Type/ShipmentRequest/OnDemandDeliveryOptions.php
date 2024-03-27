@@ -148,11 +148,15 @@ class OnDemandDeliveryOptions
             }
         }
 
-        if ($deliveryOption === DeliveryOption::TV && empty($selectedServicePointId)) {
-            throw new \InvalidArgumentException(
-                'The selected service point id is required for selected delivery option'
-            );
-        }
+	    if ($deliveryOption === DeliveryOption::TV) {
+		    if (empty($selectedServicePointId)) {
+			    throw new \InvalidArgumentException(
+				    'The selected service point id is required for selected delivery option: ' . DeliveryOption::TV
+			    );
+		    }
+
+		    $this->setSelectedServicePointId($selectedServicePointId);
+	    }
     }
 
     /**
@@ -175,6 +179,7 @@ class OnDemandDeliveryOptions
     public function setDeliveryOption($deliveryOption)
     {
         $this->DeliveryOption = new DeliveryOption($deliveryOption);
+
         return $this;
     }
 
@@ -198,6 +203,7 @@ class OnDemandDeliveryOptions
     public function setLocation($location)
     {
         $this->Location = new Location($location);
+
         return $this;
     }
 
@@ -221,6 +227,7 @@ class OnDemandDeliveryOptions
     public function setInstructions($instructions)
     {
         $this->Instructions = new Instructions($instructions);
+
         return $this;
     }
 
@@ -244,6 +251,7 @@ class OnDemandDeliveryOptions
     public function setGateCode($gateCode)
     {
         $this->GateCode = new GateCode($gateCode);
+
         return $this;
     }
 
@@ -267,6 +275,7 @@ class OnDemandDeliveryOptions
     public function setLWNTypeCode($lwnTypeCode)
     {
         $this->LWNTypeCode = new LWNTypeCode($lwnTypeCode);
+
         return $this;
     }
 
@@ -290,6 +299,7 @@ class OnDemandDeliveryOptions
     public function setNeighbourName($neighbourName)
     {
         $this->NeighbourName = new NeighbourName($neighbourName);
+
         return $this;
     }
 
@@ -313,6 +323,7 @@ class OnDemandDeliveryOptions
     public function setNeighbourHouseNumber($neighbourHouseNumber)
     {
         $this->NeighbourHouseNumber = new NeighbourHouseNumber($neighbourHouseNumber);
+
         return $this;
     }
 
@@ -336,6 +347,7 @@ class OnDemandDeliveryOptions
     public function setAuthorizerName($name)
     {
         $this->AuthorizerName = new AuthorizerName($name);
+
         return $this;
     }
 
@@ -359,6 +371,7 @@ class OnDemandDeliveryOptions
     public function setSelectedServicePointId($selectedServicePointId)
     {
         $this->SelectedServicePointID = new SelectedServicePointId($selectedServicePointId);
+
         return $this;
     }
 
@@ -382,6 +395,7 @@ class OnDemandDeliveryOptions
     public function setRequestedDeliveryDate($requestedDeliveryDate)
     {
         $this->RequestedDeliveryDate = new RequestedDeliveryDate($requestedDeliveryDate);
+
         return $this;
     }
 }
