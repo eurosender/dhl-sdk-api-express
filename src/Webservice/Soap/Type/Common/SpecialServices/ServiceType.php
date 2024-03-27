@@ -24,6 +24,8 @@ class ServiceType implements ValueInterface
     const TYPE_PAPERLESS = 'WY';
     const TYPE_DOCUMENT_INSURANCE = 'IB';
 
+	const TYPE_ON_DEMAND_DELIVERY = 'TV';
+
     /**
      * The service type.
      *

@@ -54,17 +54,22 @@ class Ship
      */
     private $Recipient;
 
-    /**
-     * Constructs the ship section.
-     *
-     * @param ContactInfo $shipper   The shipper contact info
-     * @param ContactInfo $recipient The recipient contact info
-     */
-    public function __construct(ContactInfo $shipper, ContactInfo $recipient)
-    {
-        $this->setShipper($shipper)
-            ->setRecipient($recipient);
-    }
+	/**
+	 * Constructs the ship section.
+	 *
+	 * @param ContactInfo      $shipper   The shipper contact info
+	 * @param ContactInfo      $recipient The recipient contact info
+	 * @param BuyerContactInfo $buyer     Needed in some requests
+	 */
+	public function __construct(ContactInfo $shipper, ContactInfo $recipient, BuyerContactInfo $buyer = null)
+	{
+		$this->setShipper($shipper)
+			->setRecipient($recipient);
+
+		if ($buyer) {
+			$this->setBuyer($buyer);
+		}
+	}
 
     /**
      * Returns the shipper contact info.
@@ -86,6 +91,7 @@ class Ship
     public function setShipper(ContactInfo $contactInfo)
     {
         $this->Shipper = $contactInfo;
+
         return $this;
     }
 
@@ -109,6 +115,7 @@ class Ship
     public function setPickup(ContactInfo $contactInfo)
     {
         $this->Pickup = $contactInfo;
+
         return $this;
     }
 
@@ -132,6 +139,7 @@ class Ship
     public function setBookingRequestor(ContactInfo $contactInfo)
     {
         $this->BookingRequestor = $contactInfo;
+
         return $this;
     }
 
@@ -155,6 +163,7 @@ class Ship
     public function setBuyer(BuyerContactInfo $contactInfo)
     {
         $this->Buyer = $contactInfo;
+
         return $this;
     }
 
@@ -178,6 +187,7 @@ class Ship
     public function setRecipient(ContactInfo $contactInfo)
     {
         $this->Recipient = $contactInfo;
+
         return $this;
     }
 }

@@ -72,13 +72,37 @@ class ShipmentRequestMapper
 			$shipmentInfo->setPaperlessTradeImage($request->getShipmentDetails()->getPaperlessEncodedStringDocument());
 		}
 
+		/**
+		 * When using on demand delivery options then Buyer segment is required
+		 */
+		if ($request->getOnDemandDeliveryOptions()) {
+			$buyerInfo = new Ship\BuyerContactInfo(
+				new Ship\Contact(
+					$request->getShipper()->getName(),
+					$request->getShipper()->getCompany(),
+					$request->getShipper()->getPhone(),
+					$request->getShipper()->getMobilePhone(),
+					$request->getShipper()->getEmail()
+				),
+				new Ship\BuyerAddress(
+					$request->getShipper()->getStreetLines()[0],
+					$request->getShipper()->getCity(),
+					$request->getShipper()->getPostalCode(),
+					$request->getShipper()->getCountryCode(),
+					$request->getShipper()->getStateOrProvince()
+				)
+			);
+		}
+
 		// Create ship
 		$ship = new Ship(
 			new Ship\ContactInfo(
 				new Ship\Contact(
 					$request->getShipper()->getName(),
 					$request->getShipper()->getCompany(),
-					$request->getShipper()->getPhone()
+					$request->getShipper()->getPhone(),
+					$request->getShipper()->getMobilePhone(),
+					$request->getShipper()->getEmail()
 				),
 				new Address(
 					$request->getShipper()->getStreetLines()[0],
@@ -92,7 +116,9 @@ class ShipmentRequestMapper
 				new Ship\Contact(
 					$request->getRecipient()->getName(),
 					$request->getRecipient()->getCompany(),
-					$request->getRecipient()->getPhone()
+					$request->getRecipient()->getPhone(),
+					$request->getRecipient()->getMobilePhone(),
+					$request->getRecipient()->getEmail()
 				),
 				new Address(
 					$request->getRecipient()->getStreetLines()[0],
@@ -101,7 +127,8 @@ class ShipmentRequestMapper
 					$request->getRecipient()->getCountryCode(),
 					$request->getRecipient()->getStateOrProvince()
 				)
-			)
+			),
+			$buyerInfo
 		);
 
 		$commodities = new InternationalDetail\Commodities(
@@ -193,6 +220,13 @@ class ShipmentRequestMapper
 		if ($shipmentInfo->getPaperlessTradeEnabled()) {
 			$paperlessService = new Service(ServiceType::TYPE_PAPERLESS);
 			$specialServicesList[] = $paperlessService;
+		}
+
+		if ($request->getOnDemandDeliveryOptions()) {
+			$requestedShipment->setOnDemandDeliveryOptions($request->getOnDemandDeliveryOptions());
+
+			$specialService = new Service(ServiceType::TYPE_ON_DEMAND_DELIVERY);
+			$specialServicesList[] = $specialService;
 		}
 
 		if (!empty($specialServicesList)) {
