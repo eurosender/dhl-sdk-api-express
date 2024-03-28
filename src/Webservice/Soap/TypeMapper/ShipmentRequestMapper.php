@@ -76,6 +76,7 @@ class ShipmentRequestMapper
 		/**
 		 * When using on demand delivery options then Buyer segment is required
 		 */
+		$buyerInfo = null;
 		if ($request->getOnDemandDeliveryServicePoint()) {
 			$buyerInfo = new Ship\BuyerContactInfo(
 				new Ship\Contact(
