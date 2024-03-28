@@ -19,6 +19,7 @@ use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\DangerousGoods;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\DangerousGoods\Content;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\InternationalDetail\ExportDeclaration;
+use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\OnDemandDeliveryOptions;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\Packages;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\Packages\RequestedPackages;
 use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\RequestedShipment;
@@ -75,7 +76,7 @@ class ShipmentRequestMapper
 		/**
 		 * When using on demand delivery options then Buyer segment is required
 		 */
-		if ($request->getOnDemandDeliveryOptions()) {
+		if ($request->getOnDemandDeliveryServicePoint()) {
 			$buyerInfo = new Ship\BuyerContactInfo(
 				new Ship\Contact(
 					$request->getShipper()->getName(),
@@ -222,8 +223,18 @@ class ShipmentRequestMapper
 			$specialServicesList[] = $paperlessService;
 		}
 
-		if ($request->getOnDemandDeliveryOptions()) {
-			$requestedShipment->setOnDemandDeliveryOptions($request->getOnDemandDeliveryOptions());
+		if ($request->getOnDemandDeliveryServicePoint()) {
+			$onDemandDeliveryOptions = new OnDemandDeliveryOptions(
+				OnDemandDeliveryOptions\DeliveryOption::TV,
+				null,
+				null,
+				null,
+				null,
+				null,
+				$request->getOnDemandDeliveryServicePoint()
+			);
+
+			$requestedShipment->setOnDemandDeliveryOptions($onDemandDeliveryOptions);
 
 			$specialService = new Service(ServiceType::TYPE_ON_DEMAND_DELIVERY);
 			$specialServicesList[] = $specialService;

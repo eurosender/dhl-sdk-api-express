@@ -13,7 +13,6 @@ use Dhl\Express\Api\Data\ShipmentRequestInterface;
 use Dhl\Express\Model\Request\InternationalDetail;
 use Dhl\Express\Model\Request\Recipient;
 use Dhl\Express\Model\Request\Shipment\Shipper;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\OnDemandDeliveryOptions;
 
 /**
  * Shipment Request.
@@ -69,9 +68,9 @@ class ShipmentRequest implements ShipmentRequestInterface
 	private $dryIce;
 
 	/**
-	 * @var OnDemandDeliveryOptions|null
+	 * @var string|null
 	 */
-	private $onDemandDeliveryOptions;
+	private $onDemandDeliveryServicePoint;
 
 	/**
 	 * SoapShipmentRequest constructor.
@@ -89,7 +88,7 @@ class ShipmentRequest implements ShipmentRequestInterface
 		Shipper $shipper,
 		Recipient $recipient,
 		array $packages,
-		?InternationalDetail $internationalDetail
+		$internationalDetail = null
 	) {
 		$this->shipmentDetails = $shipmentDetails;
 		$this->payerAccountNumber = $payerAccountNumber;
@@ -189,14 +188,14 @@ class ShipmentRequest implements ShipmentRequestInterface
 		return $this->internationalDetail;
 	}
 
-	public function getOnDemandDeliveryOptions()
+	public function getOnDemandDeliveryServicePoint()
 	{
-		return $this->onDemandDeliveryOptions;
+		return $this->onDemandDeliveryServicePoint;
 	}
 
-	public function setOnDemandDeliveryOptions(OnDemandDeliveryOptions $onDemandDeliveryOptions)
+	public function setOnDemandDeliveryServicePoint($servicePointId)
 	{
-		$this->onDemandDeliveryOptions = $onDemandDeliveryOptions;
+		$this->onDemandDeliveryServicePoint = $servicePointId;
 
 		return $this;
 	}

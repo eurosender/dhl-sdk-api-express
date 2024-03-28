@@ -5,10 +5,8 @@
 
 namespace Dhl\Express\Webservice\Soap\Type\ShipmentRequest;
 
-use Dhl\Express\Webservice\Soap\Type\Common\AlphaNumeric;
 use Dhl\Express\Webservice\Soap\Type\Common\PaymentInfo;
 use Dhl\Express\Webservice\Soap\Type\Common\ShipTimestamp;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\ExportDeclaration;
 
 /**
  * The requested shipment.
@@ -101,7 +99,7 @@ class RequestedShipment
 		ShipmentInfo $shipmentInfo,
 		$shipTimestamp,
 		$paymentInfo,
-		?InternationalDetail $internationalDetail,
+		$internationalDetail,
 		Ship $ship,
 		Packages $packages
 	) {
