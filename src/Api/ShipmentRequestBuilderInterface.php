@@ -245,7 +245,7 @@ interface ShipmentRequestBuilderInterface
 	 *
 	 * @return ShipmentRequestBuilderInterface
 	 */
-	public function setOnDemandDelivery(string $servicePointId);
+	public function setOnDemandDeliveryServicePoint($servicePointId);
 
 	/**
 	 * Builds the shipment request instance.

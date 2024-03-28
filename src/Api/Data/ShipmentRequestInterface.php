@@ -12,9 +12,7 @@ use Dhl\Express\Api\Data\Request\RecipientInterface;
 use Dhl\Express\Api\Data\Request\Shipment\DangerousGoods\DryIceInterface;
 use Dhl\Express\Api\Data\Request\Shipment\ShipmentDetailsInterface;
 use Dhl\Express\Api\Data\Request\Shipment\ShipperInterface;
-use Dhl\Express\Model\Request\InternationalDetail;
 use Dhl\Express\Model\ShipmentRequest;
-use Dhl\Express\Webservice\Soap\Type\ShipmentRequest\OnDemandDeliveryOptions;
 
 /**
  * Shipment Request Interface.
@@ -83,14 +81,14 @@ interface ShipmentRequestInterface
 	public function getInternationalDetail();
 
 	/**
-	 * @return OnDemandDeliveryOptions|null
+	 * @return string|null
 	 */
-	public function getOnDemandDeliveryOptions();
+	public function getOnDemandDeliveryServicePoint();
 
 	/**
-	 * @param OnDemandDeliveryOptions $onDemandDeliveryOptions
+	 * @param string $servicePoint
 	 *
 	 * @return $this
 	 */
-	public function setOnDemandDeliveryOptions(OnDemandDeliveryOptions $onDemandDeliveryOptions);
+	public function setOnDemandDeliveryServicePoint($servicePoint);
 }

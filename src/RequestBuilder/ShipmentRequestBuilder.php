@@ -411,17 +411,9 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 		return $this;
 	}
 
-	public function setOnDemandDelivery(string $servicePointId)
+	public function setOnDemandDeliveryServicePoint($servicePointId)
 	{
-		$this->data['onDemandDelivery'] = new OnDemandDeliveryOptions(
-			OnDemandDeliveryOptions\DeliveryOption::TV,
-			null,
-			null,
-			null,
-			null,
-			null,
-			$servicePointId
-		);
+		$this->data['onDemandDeliveryServicePoint'] = $servicePointId;
 
 		return $this;
 	}
@@ -551,8 +543,8 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			$request->setDryIce($dryIce);
 		}
 
-		if (isset($this->data['onDemandDelivery'])) {
-			$request->setOnDemandDeliveryOptions($this->data['onDemandDelivery']);
+		if (isset($this->data['onDemandDeliveryServicePoint'])) {
+			$request->setOnDemandDeliveryServicePoint($this->data['onDemandDeliveryServicePoint']);
 		}
 
 		$this->data = [];
