@@ -91,4 +91,16 @@ interface ShipmentRequestInterface
 	 * @return $this
 	 */
 	public function setOnDemandDeliveryServicePoint($servicePoint);
+
+	/**
+	 * @return string
+	 */
+	public function getOnDemandDeliveryInstructions();
+
+	/**
+	 * @param string $onDemandDeliveryInstructions
+	 *
+	 * @return $this
+	 */
+	public function setOnDemandDeliveryInstructions($onDemandDeliveryInstructions);
 }
