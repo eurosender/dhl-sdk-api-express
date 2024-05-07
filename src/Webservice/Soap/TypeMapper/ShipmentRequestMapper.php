@@ -235,6 +235,8 @@ class ShipmentRequestMapper
 				$request->getOnDemandDeliveryServicePoint()
 			);
 
+			$onDemandDeliveryOptions->setInstructions($request->getOnDemandDeliveryInstructions());
+
 			$requestedShipment->setOnDemandDeliveryOptions($onDemandDeliveryOptions);
 
 			$specialService = new Service(ServiceType::TYPE_ON_DEMAND_DELIVERY);

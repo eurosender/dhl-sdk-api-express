@@ -411,9 +411,10 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 		return $this;
 	}
 
-	public function setOnDemandDeliveryServicePoint($servicePointId)
+	public function setOnDemandDeliveryServicePointData($servicePointId, $instructions)
 	{
 		$this->data['onDemandDeliveryServicePoint'] = $servicePointId;
+		$this->data['onDemandDeliveryInstructions'] = $instructions;
 
 		return $this;
 	}
@@ -545,6 +546,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 
 		if (isset($this->data['onDemandDeliveryServicePoint'])) {
 			$request->setOnDemandDeliveryServicePoint($this->data['onDemandDeliveryServicePoint']);
+			$request->setOnDemandDeliveryInstructions($this->data['onDemandDeliveryInstructions']);
 		}
 
 		$this->data = [];

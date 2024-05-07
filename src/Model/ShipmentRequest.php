@@ -73,6 +73,11 @@ class ShipmentRequest implements ShipmentRequestInterface
 	private $onDemandDeliveryServicePoint;
 
 	/**
+	 * @var string|null
+	 */
+	private $onDemandDeliveryInstructions;
+
+	/**
 	 * SoapShipmentRequest constructor.
 	 *
 	 * @param ShipmentDetailsInterface $shipmentDetails
@@ -196,6 +201,23 @@ class ShipmentRequest implements ShipmentRequestInterface
 	public function setOnDemandDeliveryServicePoint($servicePointId)
 	{
 		$this->onDemandDeliveryServicePoint = $servicePointId;
+
+		return $this;
+	}
+
+	public function getOnDemandDeliveryInstructions()
+	{
+		return $this->onDemandDeliveryInstructions;
+	}
+
+	/**
+	 * @param string $onDemandDeliveryInstructions
+	 *
+	 * @return $this
+	 */
+	public function setOnDemandDeliveryInstructions($onDemandDeliveryInstructions)
+	{
+		$this->onDemandDeliveryInstructions = $onDemandDeliveryInstructions;
 
 		return $this;
 	}
