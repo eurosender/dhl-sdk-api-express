@@ -59,7 +59,8 @@ class ShipmentRequestMapper
 			),
 			$request->getShipmentDetails()->getServiceType(),
 			$request->getShipmentDetails()->getCurrencyCode(),
-			$this->mapUOM($weightUOM, $dimensionsUOM)
+			$this->mapUOM($weightUOM, $dimensionsUOM),
+			$request->getShipmentDetails()->getLabelType()
 		);
 
 		if (!empty($request->getShipmentDetails()->getSpecialShipmentInstructions())) {

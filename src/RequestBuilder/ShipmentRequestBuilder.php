@@ -196,6 +196,13 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 		return $this;
 	}
 
+	public function setLabelType($labelType)
+	{
+		$this->data['labelType'] = $labelType;
+
+		return $this;
+	}
+
 	public function setDescription($description)
 	{
 		$this->data['description'] = $description;
@@ -429,6 +436,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			$this->data['readyAtTimestamp'],
 			$this->data['numberOfPieces'],
 			$this->data['currencyCode'],
+			$this->data['labelType'],
 			$this->data['description'],
 			$this->data['customsValue'],
 			$this->data['serviceType'],
