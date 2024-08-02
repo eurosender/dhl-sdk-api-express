@@ -169,20 +169,27 @@ class ShipmentInfo
     private $SpecialPickupInstructions;
 
 	/**
-     * Constructor.
-     *
-     * @param string $dropOffType               The drop off type
-     * @param string $serviceType               The service type
-     * @param string $currencyCode              The currency code
-     * @param string $unitOfMeasurement         The unit of measurement
-     */
-    public function __construct($dropOffType, $serviceType, $currencyCode, $unitOfMeasurement)
-    {
+	 * Constructor.
+	 *
+	 * @param string $dropOffType       The drop off type
+	 * @param string $serviceType       The service type
+	 * @param string $currencyCode      The currency code
+	 * @param string $unitOfMeasurement The unit of measurement
+	 * @param string $labelType
+	 */
+	public function __construct(
+		string $dropOffType,
+		string $serviceType,
+		string $currencyCode,
+		string $unitOfMeasurement,
+		string $labelType
+	) {
         $this
             ->setDropOffType($dropOffType)
             ->setServiceType($serviceType)
             ->setCurrency($currencyCode)
-            ->setUnitOfMeasurement($unitOfMeasurement);
+            ->setUnitOfMeasurement($unitOfMeasurement)
+	        ->setLabelType($labelType);
     }
 
     /**

@@ -63,13 +63,6 @@ interface ShipmentDetailsInterface
      */
     public function getCurrencyCode();
 
-	/**
-	 * Returns the label type.
-	 *
-	 * @return string
-	 */
-	public function getLabelType();
-
     /**
      * Returns the description.
      *

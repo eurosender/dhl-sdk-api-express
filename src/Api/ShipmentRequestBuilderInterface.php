@@ -70,6 +70,15 @@ interface ShipmentRequestBuilderInterface
 	public function setCurrency($currencyCode);
 
 	/**
+	 * Sets the label type.
+	 *
+	 * @param string $labelType
+	 *
+	 * @return ShipmentRequestBuilderInterface
+	 */
+	public function setLabelType($labelType);
+
+	/**
 	 * Sets the description.
 	 *
 	 * @param string $description

@@ -106,6 +106,13 @@ class ShipmentDetails implements ShipmentDetailsInterface
      */
     private $currencyCode;
 
+	/**
+	 * The label type.
+	 *
+	 * @var string
+	 */
+	private $labelType;
+
     /**
      * The description.
      *
@@ -146,6 +153,7 @@ class ShipmentDetails implements ShipmentDetailsInterface
 	 * @param \DateTime $readyAtTimestamp
 	 * @param int       $numberOfPieces
 	 * @param string    $currencyCode
+	 * @param string    $labelType
 	 * @param string    $description
 	 * @param float|null     $customsValue
 	 * @param string    $serviceType
@@ -159,6 +167,7 @@ class ShipmentDetails implements ShipmentDetailsInterface
         $readyAtTimestamp,
         $numberOfPieces,
         $currencyCode,
+	    $labelType,
         $description,
         $customsValue,
         $serviceType,
@@ -171,6 +180,7 @@ class ShipmentDetails implements ShipmentDetailsInterface
         $this->readyAtTimestamp = $readyAtTimestamp;
         $this->numberOfPieces = $numberOfPieces;
         $this->currencyCode = $currencyCode;
+	    $this->labelType = $labelType;
         $this->description = $description;
         $this->customsValue = $customsValue;
         $this->serviceType = $serviceType;
@@ -212,6 +222,11 @@ class ShipmentDetails implements ShipmentDetailsInterface
     {
         return (string) $this->currencyCode;
     }
+
+	public function getLabelType()
+	{
+		return $this->labelType;
+	}
 
     public function getDescription()
     {
