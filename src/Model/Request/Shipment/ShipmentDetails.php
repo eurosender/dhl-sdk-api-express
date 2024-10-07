@@ -145,6 +145,11 @@ class ShipmentDetails implements ShipmentDetailsInterface
 	private $paperlessDocument;
 
 	/**
+	 * @var string
+	 */
+	private $labelTemplate;
+
+	/**
 	 * ShipmentDetails constructor.
 	 *
 	 * @param bool      $unscheduledPickup
@@ -159,6 +164,7 @@ class ShipmentDetails implements ShipmentDetailsInterface
 	 * @param string    $serviceType
 	 * @param string    $specialPickupInstructions
 	 * @param string    $paperlessDocument
+	 * @param string    $labelTemplate
 	 */
     public function __construct(
         $unscheduledPickup,
@@ -172,7 +178,8 @@ class ShipmentDetails implements ShipmentDetailsInterface
         $customsValue,
         $serviceType,
         $specialPickupInstructions,
-        $paperlessDocument
+        $paperlessDocument,
+	    $labelTemplate
     ) {
         $this->unscheduledPickup = $unscheduledPickup;
         $this->termsOfTrade = $termsOfTrade;
@@ -186,6 +193,7 @@ class ShipmentDetails implements ShipmentDetailsInterface
         $this->serviceType = $serviceType;
         $this->specialPickupInstructions = $specialPickupInstructions;
         $this->paperlessDocument = $paperlessDocument;
+	    $this->labelTemplate = $labelTemplate;
     }
 
     public function isUnscheduledPickup()
@@ -251,5 +259,10 @@ class ShipmentDetails implements ShipmentDetailsInterface
 	public function getPaperlessEncodedStringDocument()
 	{
         return (string) $this->paperlessDocument;
+	}
+
+	public function getLabelTemplate()
+	{
+		return $this->labelTemplate;
 	}
 }

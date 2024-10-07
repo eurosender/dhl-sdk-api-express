@@ -176,21 +176,24 @@ class ShipmentInfo
 	 * @param string $currencyCode      The currency code
 	 * @param string $unitOfMeasurement The unit of measurement
 	 * @param string $labelType
+	 * @param string $labelTemplate     The size of the label via a template label
 	 */
 	public function __construct(
 		string $dropOffType,
 		string $serviceType,
 		string $currencyCode,
 		string $unitOfMeasurement,
-		string $labelType
+		string $labelType,
+		string $labelTemplate
 	) {
-        $this
-            ->setDropOffType($dropOffType)
-            ->setServiceType($serviceType)
-            ->setCurrency($currencyCode)
-            ->setUnitOfMeasurement($unitOfMeasurement)
-	        ->setLabelType($labelType);
-    }
+		$this
+			->setDropOffType($dropOffType)
+			->setServiceType($serviceType)
+			->setCurrency($currencyCode)
+			->setUnitOfMeasurement($unitOfMeasurement)
+			->setLabelType($labelType)
+			->setLabelTemplate($labelTemplate);
+	}
 
     /**
      * Returns the drop off type.

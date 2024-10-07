@@ -36,6 +36,7 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 	{
 		$this->data['specialPickupInstructions'] = '';
 		$this->data['paperlessDocument'] = '';
+		$this->data['labelTemplate'] = 'ECOM26_84_001';
 	}
 
 	/**
@@ -199,6 +200,13 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 	public function setLabelType($labelType)
 	{
 		$this->data['labelType'] = $labelType;
+
+		return $this;
+	}
+
+	public function setLabelTemplate($labelTemplate)
+	{
+		$this->data['labelTemplate'] = $labelTemplate;
 
 		return $this;
 	}
