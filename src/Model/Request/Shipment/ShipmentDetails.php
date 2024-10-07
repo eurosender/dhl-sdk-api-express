@@ -179,7 +179,7 @@ class ShipmentDetails implements ShipmentDetailsInterface
         $serviceType,
         $specialPickupInstructions,
         $paperlessDocument,
-	    $labelTemplate
+        $labelTemplate
     ) {
         $this->unscheduledPickup = $unscheduledPickup;
         $this->termsOfTrade = $termsOfTrade;
@@ -193,7 +193,7 @@ class ShipmentDetails implements ShipmentDetailsInterface
         $this->serviceType = $serviceType;
         $this->specialPickupInstructions = $specialPickupInstructions;
         $this->paperlessDocument = $paperlessDocument;
-	    $this->labelTemplate = $labelTemplate;
+        $this->labelTemplate = $labelTemplate;
     }
 
     public function isUnscheduledPickup()
@@ -263,6 +263,6 @@ class ShipmentDetails implements ShipmentDetailsInterface
 
 	public function getLabelTemplate()
 	{
-		return $this->labelTemplate;
+        return $this->labelTemplate;
 	}
 }
