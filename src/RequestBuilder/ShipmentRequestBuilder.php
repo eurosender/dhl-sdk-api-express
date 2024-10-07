@@ -36,7 +36,6 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 	{
 		$this->data['specialPickupInstructions'] = '';
 		$this->data['paperlessDocument'] = '';
-		$this->data['labelTemplate'] = 'ECOM26_84_001';
 	}
 
 	/**
