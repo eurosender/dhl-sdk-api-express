@@ -79,6 +79,15 @@ interface ShipmentRequestBuilderInterface
 	public function setLabelType($labelType);
 
 	/**
+	 * Sets the label template.
+	 *
+	 * @param string $labelTemplate
+	 *
+	 * @return ShipmentRequestBuilderInterface
+	 */
+	public function setLabelTemplate($labelTemplate);
+
+	/**
 	 * Sets the description.
 	 *
 	 * @param string $description

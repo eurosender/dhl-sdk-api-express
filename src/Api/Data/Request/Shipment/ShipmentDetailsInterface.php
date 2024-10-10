@@ -93,4 +93,9 @@ interface ShipmentDetailsInterface
 	 * @return string
 	 */
 	public function getPaperlessEncodedStringDocument();
+
+	/**
+	 * @return string
+	 */
+	public function getLabelTemplate();
 }

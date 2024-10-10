@@ -203,6 +203,13 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 		return $this;
 	}
 
+	public function setLabelTemplate($labelTemplate)
+	{
+		$this->data['labelTemplate'] = $labelTemplate;
+
+		return $this;
+	}
+
 	public function setDescription($description)
 	{
 		$this->data['description'] = $description;
