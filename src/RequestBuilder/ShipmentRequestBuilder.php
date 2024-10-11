@@ -448,7 +448,8 @@ class ShipmentRequestBuilder implements ShipmentRequestBuilderInterface
 			$this->data['customsValue'],
 			$this->data['serviceType'],
 			$this->data['specialPickupInstructions'],
-			$this->data['paperlessDocument']
+			$this->data['paperlessDocument'],
+			$this->data['labelTemplate']
 		);
 
 		// Build shipper
