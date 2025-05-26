@@ -10,7 +10,7 @@ data.
 
 ## Requirements
 
-* PHP >= 5.6.5 <= 7.3
+* PHP >= 5.6.5
 * DHL Express customer account able to access the production endpoints (optionally sandpit too)
 
 ## Installation Instructions
